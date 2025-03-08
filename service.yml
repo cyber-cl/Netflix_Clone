@@ -4,11 +4,23 @@ metadata:
   name: netflix-app
   labels:
     app: netflix-app
+    tier: frontend
+  annotations:
+    service.beta.kubernetes.io/description: "Netflix Clone Frontend Service"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "80"
 spec:
   type: NodePort
   ports:
   - port: 80
     targetPort: 80
     nodePort: 30007
+    name: http
+    protocol: TCP
   selector:
     app: netflix-app
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours
+  externalTrafficPolicy: Local
